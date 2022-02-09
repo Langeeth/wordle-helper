@@ -22,8 +22,10 @@ def antiscore(word):
     letters = []
     for c in word:
         if c not in letters:
-            if c not in excluded_letters:
-                score += antialphabet.index(c)
+            if c not in excluded_letters and c not in solution_letters:
+                score += alphabet.index(c)
+            else:
+                score -= alphabet.index(c)
         letters.append(c)
     return (word, score)
 
@@ -51,12 +53,9 @@ if __name__ == "__main__":
         wordlist = open('5letterwords', 'r').read().split("\n")
     excluded_letters = []
     found_letters = []
+    solution_letters = []
     solution = list(".....")
     result = "xxxxx"
-    unalphabet = []
-    
-    for i in range(0, len(alphabet)):
-        unalphabet.append((alphabet[i], i))
         
     while result != "GGGGG":
         for i in range(len(solution)):
@@ -65,7 +64,7 @@ if __name__ == "__main__":
                 solution[i] = "[^{}]".format("".join(exclude_here))
         solution_regex = "^" + ("".join(solution)) + "$"
         print("Current Solution:\t{}\n".format(solution_regex))
-        print("Discovered Letters:\t{}\n".format(", ".join([f[0] for f in found_letters])))
+        print("Discovered Letters:\t{}\n".format(", ".join([f for f in solution_letters])))
         print("Excluded Letters:\t{}\n".format(", ".join(excluded_letters)))
 
         top_matching_words = rank([w for w in wordlist if
@@ -88,14 +87,11 @@ if __name__ == "__main__":
             r = result[i]
             if r == "G" or r == "g":
                 solution[i] = g
-                #unalphabet.remove(g)
+                if not g in solution_letters:
+                    solution_letters.append(g)
             if r == "Y" or r == "y":
                 found_letters.append((g, i))
+                if not g in solution_letters:
+                    solution_letters.append(g)
             if r == "x" or r == "x":
                 excluded_letters.append(g)
-                try:
-                    for d in unalphabet:
-                        if d[0] == g:
-                            unalphabet.remove(d)
-                except ValueError:
-                    pass
