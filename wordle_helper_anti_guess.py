@@ -57,7 +57,7 @@ if __name__ == "__main__":
     solution = list(".....")
     result = "xxxxx"
         
-    while result != "GGGGG":
+    while result != "GGGGG" and result != "ggggg":
         for i in range(len(solution)):
             if solution[i] not in alphabet and (len(excluded_letters) + len(found_letters) > 0):
                 exclude_here = excluded_letters + [l[0] for l in found_letters if l[1] == i]
